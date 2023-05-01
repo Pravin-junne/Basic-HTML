@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>links in html</title>
+
+    <!--Stylesheet for demo id-->
+    <style>
+        a,#demo:link{
+            color: aqua;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a,#demo:visited{
+            color:red;
+            background-color: none;
+            text-decoration:none;
+        }
+        a,#demo:hover{
+            color:black;
+            background-color: transparent;
+            text-decoration: underline;
+        }
+        a,#demo:active{
+            color:blue;
+            background-color:transparent;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!--link -->
+    <a href="https://www.google.com/">click here to go on google.</a><br><br>
+<!--link using button tag-->
+    <button onclick="document.location='https://www.google.com/'">Google</button>
+
+    <!--link changed basic properties with the help of css-->
+    <p>We can change link color by using CSS.</p>
+
+    <a id="demo"  href="https://www.google.com/">click to go on google</a>
+
+    
+</body>
+</html>
