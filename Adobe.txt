@@ -1,0 +1,370 @@
+Q.1 Create android application to change Font Size, Color and Font Family of String.
+----------------------------------------------------------------------------------------------------------
+
+***MainActivity.java***
+
+package com.pjstudio.demo; 
+		     //project name
+
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.AdapterView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView textView;
+    private SeekBar seekBarFontSize;
+    private Spinner spinnerColor, spinnerFont;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        textView = findViewById(R.id.textView);
+        seekBarFontSize = findViewById(R.id.seekBarFontSize);
+        spinnerColor = findViewById(R.id.spinnerColor);
+        spinnerFont = findViewById(R.id.spinnerFont);
+
+        // Font Size Change
+        seekBarFontSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textView.setTextSize(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        // Font Color Change
+        spinnerColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+                String selectedColor = parent.getItemAtPosition(position).toString();
+                switch (selectedColor) {
+                    case "Red": textView.setTextColor(Color.RED); break;
+                    case "Green": textView.setTextColor(Color.GREEN); break;
+                    case "Blue": textView.setTextColor(Color.BLUE); break;
+                    default: textView.setTextColor(Color.BLACK);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        // Font Family Change
+        spinnerFont.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+                String selectedFont = parent.getItemAtPosition(position).toString();
+                switch (selectedFont) {
+                    case "Serif": textView.setTypeface(Typeface.SERIF); break;
+                    case "Monospace": textView.setTypeface(Typeface.MONOSPACE); break;
+                    default: textView.setTypeface(Typeface.SANS_SERIF);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+    }
+}
+--------------------------------------------------------------------------------------------------------------
+
+***activity_main.xml***
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello, Change My Style!"
+        android:textSize="24sp"
+        android:textColor="#000000"
+        android:fontFamily="sans-serif"
+        android:padding="20dp"/>
+
+    <SeekBar
+        android:id="@+id/seekBarFontSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="50"
+        android:progress="24"/>
+
+    <Spinner
+        android:id="@+id/spinnerColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/colors"/>
+
+    <Spinner
+        android:id="@+id/spinnerFont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/fonts"/>
+
+</LinearLayout>
+
+-------------------------------------------------------------------------------------
+*Define Color & Font Arrays 
+*(res/values/strings.xml)
+
+<resources>
+    <string name="app_name">Font Customizer</string>
+
+    <string-array name="colors">
+        <item>Black</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string-array name="fonts">
+        <item>Sans-serif</item>
+        <item>Serif</item>
+        <item>Monospace</item>
+    </string-array>
+</resources>
+________________________________________________________________________________________________________________________________________
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+_________________________________________________________________________________________________________________________________________
+
+
+
+Q.2 Create First Activity to accept information like Student First Name, Middle Name, Last Name,
+ 
+Date of birth, Address, Email ID and display all information on Second Activity whenuser click on
+ 
+the Submit button.
+-------------------------------------------------
+***AndroidManifest.xml***
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Studentinfo"
+        tools:targetApi="31">
+
+        <!-- Declare MainActivity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Declare SecondActivity -->
+        <activity
+            android:name=".SecondActivity"
+            android:exported="true">
+        </activity>
+
+    </application>
+
+</manifest>
+---------------------------------------------------------------------------------------------
+
+***MainActivity.java***
+
+package com.pjstudio.studentinfo;
+
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText etFirstName, etMiddleName, etLastName, etDOB, etAddress, etEmail;
+    private Button btnSubmit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI Elements
+        etFirstName = findViewById(R.id.etFirstName);
+        etMiddleName = findViewById(R.id.etMiddleName);
+        etLastName = findViewById(R.id.etLastName);
+        etDOB = findViewById(R.id.etDOB);
+        etAddress = findViewById(R.id.etAddress);
+        etEmail = findViewById(R.id.etEmail);
+        btnSubmit = findViewById(R.id.btnSubmit);
+
+        // Submit Button Click
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get User Input
+                String firstName = etFirstName.getText().toString();
+                String middleName = etMiddleName.getText().toString();
+                String lastName = etLastName.getText().toString();
+                String dob = etDOB.getText().toString();
+                String address = etAddress.getText().toString();
+                String email = etEmail.getText().toString();
+
+                // Create Intent & Pass Data
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra("firstName", firstName);
+                intent.putExtra("middleName", middleName);
+                intent.putExtra("lastName", lastName);
+                intent.putExtra("dob", dob);
+                intent.putExtra("address", address);
+                intent.putExtra("email", email);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+----------------------------------------------------------------------------------------------------------------
+
+***SecondActivity.java***
+
+package com.pjstudio.studentinfo;
+
+
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SecondActivity extends AppCompatActivity {
+
+    private TextView tvResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        tvResult = findViewById(R.id.tvResult);
+
+        // Get Intent Data
+        String firstName = getIntent().getStringExtra("firstName");
+        String middleName = getIntent().getStringExtra("middleName");
+        String lastName = getIntent().getStringExtra("lastName");
+        String dob = getIntent().getStringExtra("dob");
+        String address = getIntent().getStringExtra("address");
+        String email = getIntent().getStringExtra("email");
+
+        // Display Data
+        String studentInfo = "Student Details:\n\n" +
+                "First Name: " + firstName + "\n" +
+                "Middle Name: " + middleName + "\n" +
+                "Last Name: " + lastName + "\n" +
+                "Date of Birth: " + dob + "\n" +
+                "Address: " + address + "\n" +
+                "Email ID: " + email;
+
+        tvResult.setText(studentInfo);
+    }
+}
+
+-----------------------------------------------------------------------------------------
+
+***activity_main.xml***
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/etFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="First Name"/>
+
+    <EditText
+        android:id="@+id/etMiddleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Middle Name"/>
+
+    <EditText
+        android:id="@+id/etLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"/>
+
+    <EditText
+        android:id="@+id/etDOB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date of Birth (DD/MM/YYYY)"/>
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address"/>
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email ID"/>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
+
+
+-----------------------------------------------------------------------------------
+
+***activity_second.xml***
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Student Details will appear here"
+        android:padding="10dp"/>
+
+</LinearLayout>
+______________________________________________________________________________________________________________---
+
